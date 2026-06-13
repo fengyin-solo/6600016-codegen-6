@@ -5,9 +5,13 @@
     <!-- Tabs -->
     <div class="flex gap-2">
       <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id"
-        class="px-4 py-2 rounded text-sm font-medium"
+        class="px-4 py-2 rounded text-sm font-medium flex items-center gap-1"
         :class="activeTab === tab.id ? 'bg-amber-500 text-black' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'">
         {{ tab.label }}
+        <span v-if="tab.id === 'review' && store.wrongQuestionCount > 0"
+          class="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full leading-none">
+          {{ store.wrongQuestionCount }}
+        </span>
       </button>
     </div>
 
@@ -40,6 +44,11 @@
     <!-- Training Mode -->
     <div v-if="activeTab === 'train'" class="flex flex-col gap-4">
       <TrainingMode />
+    </div>
+
+    <!-- Review Mode -->
+    <div v-if="activeTab === 'review'" class="flex flex-col gap-4">
+      <ReviewMode />
     </div>
 
     <!-- Reference Table -->
@@ -78,6 +87,7 @@ import { useMorseStore } from './store/morse'
 import { MORSE_TABLE } from './utils/morse-code'
 import WaveformDisplay from './components/WaveformDisplay.vue'
 import TrainingMode from './components/TrainingMode.vue'
+import ReviewMode from './components/ReviewMode.vue'
 
 const store = useMorseStore()
 const morseTable = MORSE_TABLE
@@ -85,6 +95,7 @@ const morseTable = MORSE_TABLE
 const tabs = [
   { id: 'translate', label: '编码/解码' },
   { id: 'train', label: '训练模式' },
+  { id: 'review', label: '错题回炉' },
   { id: 'ref', label: '速查表' },
 ]
 const activeTab = ref('translate')

@@ -12,3 +12,12 @@ export interface HistoryEntry {
   correct: boolean
   timestamp: number
 }
+
+export interface WrongQuestion {
+  id: number
+  char: string
+  wrongAnswer: string
+  correctAnswer: string
+  timestamp: number
+  retryCount: number
+}
