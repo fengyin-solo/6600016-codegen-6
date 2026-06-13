@@ -1,6 +1,16 @@
 <template>
   <div class="flex flex-col gap-4">
-    <div v-if="!store.isReviewMode" class="grid grid-cols-2 gap-4">
+    <div v-if="store.reviewCompleted" class="bg-gray-900 rounded-xl p-6 text-center">
+      <div class="text-6xl mb-3">&#127881;</div>
+      <h3 class="text-2xl font-bold text-green-400 mb-2">全部答对！</h3>
+      <p class="text-gray-400 mb-4">恭喜，所有错题已全部通过回炉练习！</p>
+      <button @click="store.exitReview()"
+        class="bg-amber-500 text-black px-6 py-2 rounded hover:bg-amber-400">
+        返回
+      </button>
+    </div>
+
+    <div v-else-if="!store.isReviewMode" class="grid grid-cols-2 gap-4">
       <div class="bg-gray-900 rounded-xl p-4">
         <div class="flex justify-between items-center mb-3">
           <h3 class="text-amber-300 font-bold">错题汇总</h3>
@@ -128,16 +138,6 @@
         </div>
       </div>
     </div>
-
-    <div v-if="store.reviewCompleted" class="bg-gray-900 rounded-xl p-6 text-center">
-      <div class="text-6xl mb-3">&#127881;</div>
-      <h3 class="text-2xl font-bold text-green-400 mb-2">全部答对！</h3>
-      <p class="text-gray-400 mb-4">恭喜，所有错题已全部通过回炉练习！</p>
-      <button @click="store.exitReview()"
-        class="bg-amber-500 text-black px-6 py-2 rounded hover:bg-amber-400">
-        返回
-      </button>
-    </div>
   </div>
 </template>
 
@@ -182,7 +182,9 @@ function handleReviewSubmit() {
     ? '正确！'
     : `错误，正确答案: ${MORSE_TABLE[current.char]}`
 
-  setTimeout(() => { feedback.value = '' }, 1500)
-  store.checkReviewAnswer()
+  setTimeout(() => {
+    feedback.value = ''
+    store.checkReviewAnswer()
+  }, 800)
 }
 </script>

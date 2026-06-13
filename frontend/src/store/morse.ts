@@ -29,6 +29,8 @@ export const useMorseStore = defineStore('morse', () => {
 
   const dotDuration = computed(() => 1200 / wpm.value)
 
+  const isReviewCompleted = ref(false)
+
   const recentWrongQuestions = computed(() => {
     const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
     return wrongQuestions.value.filter(q => q.timestamp >= oneWeekAgo)
@@ -42,7 +44,7 @@ export const useMorseStore = defineStore('morse', () => {
   })
 
   const reviewCompleted = computed(() => {
-    return isReviewMode.value && recentWrongQuestions.value.length === 0
+    return isReviewCompleted.value
   })
 
   function getAudioCtx(): AudioContext {
@@ -160,8 +162,7 @@ export const useMorseStore = defineStore('morse', () => {
 
     const updatedWrongs = recentWrongQuestions.value
     if (updatedWrongs.length === 0) {
-      isReviewMode.value = false
-      reviewChar.value = ''
+      isReviewCompleted.value = true
       return
     }
 
@@ -182,6 +183,7 @@ export const useMorseStore = defineStore('morse', () => {
 
   function exitReview() {
     isReviewMode.value = false
+    isReviewCompleted.value = false
     reviewChar.value = ''
     reviewAnswer.value = ''
     reviewIndex.value = 0
@@ -200,7 +202,7 @@ export const useMorseStore = defineStore('morse', () => {
   return {
     inputText, morseOutput, decodedText, wpm, frequency, volume,
     trainMode, history, quizChar, userAnswer, score, isPlaying,
-    wrongQuestions, isReviewMode, reviewChar, reviewAnswer, reviewIndex, reviewCorrectCount,
+    wrongQuestions, isReviewMode, isReviewCompleted, reviewChar, reviewAnswer, reviewIndex, reviewCorrectCount,
     recentWrongQuestions, wrongQuestionCount, reviewProgress, reviewCompleted,
     dotDuration, encode, decode, playMorse, playTone,
     generateQuiz, checkAnswer, resetScore,
